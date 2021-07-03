@@ -1,0 +1,19 @@
+{
+  "name": "simpleapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@forgjs/noframework": "^2.0.2",
+    "parcel": "^2.0.0-nightly.746"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.0.0-nightly.748"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel index.html"
+  },
+  "author": "",
+  "license": "ISC"
+}
