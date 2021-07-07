@@ -7,8 +7,8 @@ const App = () => {
         ${VM()}
         <div class="floor"></div>
         <div class="light"></div>
-    </div>
-    `;
+    </div>`;
+    
     return DomElement;
 }
 document.body.append(App());

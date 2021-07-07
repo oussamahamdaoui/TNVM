@@ -385,49 +385,12 @@ function hmrAcceptRun(bundle /*: ParcelRequire */ , id /*: string */ ) {
 const { html , $  } = require('@forgjs/noframework');
 const VM = require('./VM');
 const App = ()=>{
-    const DomElement = html`\n    <div class="app">\n        ${VM()}\n        <div class="floor"></div>\n        <div class="light"></div>\n    </div>\n    `;
+    const DomElement = html`\n    <div class="app">\n        ${VM()}\n        <div class="floor"></div>\n        <div class="light"></div>\n    </div>`;
     return DomElement;
 };
 document.body.append(App());
 
-},{"./VM":"4l0QT","@forgjs/noframework":"ahxX2"}],"4l0QT":[function(require,module,exports) {
-const { html , $  } = require('@forgjs/noframework');
-const VM = ()=>{
-    const DomElement = html`<div class="vending-machine">\n        <div class="door">\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="glass-shadow"></div>\n            <div class="glass">\n                <div class="cube top"></div>\n                <div class="cube left"></div>\n                <div class="cube bot"></div>\n                <div class="cube right"></div>\n                <div class="glaire"></div>\n                <div class="shelves">\n                    <div class="shelve">\n                        <div class="product" position="11" style="--drop:400%;">\n                            <img src="one.png">\n                            <img src="one.png">\n                            <div class="position">11</div>\n                        </div>\n                        <div class="product" position="12" style="--drop:400%;">\n                            <img src="two.png">\n                            <div class="position">12</div>\n                        </div>\n                        <div class="product" position="13" style="--drop:400%;">\n                            <img src="two.png">\n                            <div class="position">13</div>\n                        </div>\n                    </div>\n                    <div class="shelve">\n                        <div class="product" position="21" style="--drop:300%;">\n                            <img src="one.png">\n                            <div class="position">21</div>\n                        </div>\n                        <div class="product" position="22" style="--drop:300%;">\n                            <div class="position">22</div>\n                        </div>\n                        <div class="product" position="23" style="--drop:300%;">\n                            <div class="position">23</div>\n                        </div>\n                    </div>\n                    <div class="shelve">\n                        <div class="product" position="31" style="--drop:200%;">\n                            <div class="position">31</div>\n                        </div>\n                        <div class="product" position="32" style="--drop:200%;">\n                            <img src="one.png">\n                            <div class="position" >32</div>\n                        </div>\n                        <div class="product" position="33" style="--drop:200%;">\n                            <div class="position">33</div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            \n            <div class="trap">\n                <div class="cube-wrapper">\n                    <div class="cube top"></div>\n                    <div class="cube left"></div>\n                    <div class="cube bot"></div>\n                    <div class="cube right"></div>\n                    <div class="cube back"></div>\n                    <img src="one.png">\n                </div>\n                <div class="trap-door-wrapper">\n                    <div class="trap-door">\n                        <div class="glaire"></div>\n                        <div class="lid">PULL</div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class="buttons">\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="pad">\n                <div class="screen">\n                   <span class="selected-item"></span>\n                </div>\n                <div class="keyboard">\n                    <button type="button" class="button">1</button>\n                    <button type="button" class="button">2</button>\n                    <button type="button" class="button">3</button>\n                    <button type="button" class="button">4</button>\n                    <button type="button" class="button">5</button>\n                    <button type="button" class="button">6</button>\n                    <button type="button" class="button green">OK</button>\n                </div>\n                <div class="card">\n                    <div class="top">PAYE</div>\n                    <div class="circle"></div>\n                    <div class="cb"></div>\n                </div>\n            </div>\n        </div>\n        <div class="foot left"></div>\n        <div class="foot right"></div>\n        <div class="bottom"></div>\n    </div>`;
-    const keyboard = $('.keyboard', DomElement);
-    const selectedItem = $('.selected-item', DomElement);
-    const trap = $('.trap', DomElement);
-    const drop = (elem)=>{
-        if (!elem || !$('img', elem)) return;
-        $('img', elem).classList.add('drop');
-        if ($('img', trap).classList.contains('drop')) $('img', trap).className = '';
-        $('img', trap).src = $('img', elem).src;
-        elem.parentNode.classList.add('drop');
-        const css = window.getComputedStyle($('img', elem));
-        const timeout = parseInt(css.animationDuration) * 620;
-        const pos = Array.from($('img', elem).parentNode.parentNode.children).indexOf($('img', elem).parentNode);
-        setTimeout(()=>{
-            $('img', trap).classList.add(`pos${pos}`);
-            $('img', trap).classList.add('drop');
-        }, timeout);
-        $('img', elem).addEventListener('animationend', ()=>{
-            $('img', elem).remove();
-        });
-    };
-    keyboard.addEventListener('click', (e)=>{
-        if (!e.target.classList.contains('button')) return;
-        if (e.target.classList.contains('green')) {
-            if (selectedItem.innerHTML.length < 2) return;
-            const id = selectedItem.innerHTML;
-            drop($(`[position="${id}"]`, DomElement));
-            selectedItem.innerHTML = "";
-        } else selectedItem.innerHTML = (selectedItem.innerHTML + e.target.innerHTML).slice(-2);
-    });
-    return DomElement;
-};
-module.exports = VM;
-
-},{"@forgjs/noframework":"ahxX2"}],"ahxX2":[function(require,module,exports) {
+},{"@forgjs/noframework":"ahxX2","./VM":"4l0QT"}],"ahxX2":[function(require,module,exports) {
 /* eslint-disable no-underscore-dangle */ // Selectors
 /**
  *
@@ -702,6 +665,43 @@ module.exports = {
     Router
 };
 
-},{}]},["iyk8B","8dZPq"], "8dZPq", "parcelRequirec30e")
+},{}],"4l0QT":[function(require,module,exports) {
+const { html , $  } = require('@forgjs/noframework');
+const VM = ()=>{
+    const DomElement = html`<div class="vending-machine">\n        <div class="door">\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="glass-shadow"></div>\n            <div class="glass">\n                <div class="cube top"></div>\n                <div class="cube left"></div>\n                <div class="cube bot"></div>\n                <div class="cube right"></div>\n                <div class="glaire"></div>\n                <div class="shelves">\n                    <div class="shelve">\n                        <div class="product" position="11" style="--drop:400%;">\n                            <img src="one.png">\n                            <img src="one.png">\n                            <div class="position">11</div>\n                        </div>\n                        <div class="product" position="12" style="--drop:400%;">\n                            <img src="two.png">\n                            <div class="position">12</div>\n                        </div>\n                        <div class="product" position="13" style="--drop:400%;">\n                            <img src="two.png">\n                            <div class="position">13</div>\n                        </div>\n                    </div>\n                    <div class="shelve">\n                        <div class="product" position="21" style="--drop:300%;">\n                            <img src="one.png">\n                            <div class="position">21</div>\n                        </div>\n                        <div class="product" position="22" style="--drop:300%;">\n                            <div class="position">22</div>\n                        </div>\n                        <div class="product" position="23" style="--drop:300%;">\n                            <div class="position">23</div>\n                        </div>\n                    </div>\n                    <div class="shelve">\n                        <div class="product" position="31" style="--drop:200%;">\n                            <div class="position">31</div>\n                        </div>\n                        <div class="product" position="32" style="--drop:200%;">\n                            <img src="one.png">\n                            <div class="position" >32</div>\n                        </div>\n                        <div class="product" position="33" style="--drop:200%;">\n                            <div class="position">33</div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            \n            <div class="trap">\n                <div class="cube-wrapper">\n                    <div class="cube top"></div>\n                    <div class="cube left"></div>\n                    <div class="cube bot"></div>\n                    <div class="cube right"></div>\n                    <div class="cube back"></div>\n                    <img src="one.png">\n                </div>\n                <div class="trap-door-wrapper">\n                    <div class="trap-door">\n                        <div class="glaire"></div>\n                        <div class="lid">PULL</div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class="buttons">\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="nail"></div>\n            <div class="pad">\n                <div class="screen">\n                   <span class="selected-item"></span>\n                </div>\n                <div class="keyboard">\n                    <button type="button" class="button">1</button>\n                    <button type="button" class="button">2</button>\n                    <button type="button" class="button">3</button>\n                    <button type="button" class="button">4</button>\n                    <button type="button" class="button">5</button>\n                    <button type="button" class="button">6</button>\n                    <button type="button" class="button green">OK</button>\n                </div>\n                <div class="card">\n                    <div class="top">PAYE</div>\n                    <div class="circle"></div>\n                    <div class="cb"></div>\n                </div>\n            </div>\n        </div>\n        <div class="foot left"></div>\n        <div class="foot right"></div>\n        <div class="bottom"></div>\n    </div>`;
+    const keyboard = $('.keyboard', DomElement);
+    const selectedItem = $('.selected-item', DomElement);
+    const trap = $('.trap', DomElement);
+    const drop = (elem)=>{
+        if (!elem || !$('img', elem)) return;
+        $('img', elem).classList.add('drop');
+        if ($('img', trap).classList.contains('drop')) $('img', trap).className = '';
+        $('img', trap).src = $('img', elem).src;
+        elem.parentNode.classList.add('drop');
+        const css = window.getComputedStyle($('img', elem));
+        const timeout = parseInt(css.animationDuration) * 620;
+        const pos = Array.from($('img', elem).parentNode.parentNode.children).indexOf($('img', elem).parentNode);
+        setTimeout(()=>{
+            $('img', trap).classList.add(`pos${pos}`);
+            $('img', trap).classList.add('drop');
+        }, timeout);
+        $('img', elem).addEventListener('animationend', ()=>{
+            $('img', elem).remove();
+        });
+    };
+    keyboard.addEventListener('click', (e)=>{
+        if (!e.target.classList.contains('button')) return;
+        if (e.target.classList.contains('green')) {
+            if (selectedItem.innerHTML.length < 2) return;
+            const id = selectedItem.innerHTML;
+            drop($(`[position="${id}"]`, DomElement));
+            selectedItem.innerHTML = "";
+        } else selectedItem.innerHTML = (selectedItem.innerHTML + e.target.innerHTML).slice(-2);
+    });
+    return DomElement;
+};
+module.exports = VM;
+
+},{"@forgjs/noframework":"ahxX2"}]},["iyk8B","8dZPq"], "8dZPq", "parcelRequirec30e")
 
 //# sourceMappingURL=index.6ed8a0c2.js.map
