@@ -117,6 +117,7 @@ const VM = (eventManager) => {
   const flickerSound = new Audio('./flicker.mp3');
   const dropSound = new Audio('./drop.mp3');
   const openSound = new Audio('./open.mp3');
+  bgSound.loop = true;
   const audioFiles = [
     {
       name: 'motorSound',
@@ -141,7 +142,7 @@ const VM = (eventManager) => {
     }, {
       name: 'openSound',
       audio: openSound,
-      volume: 0.05,
+      volume: 0.2,
     },
   ];
 
