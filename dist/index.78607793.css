@@ -30,13 +30,28 @@ body .app {
 .vending-machine {
   max-width: 500px;
   max-height: 700px;
-  width: 90vw;
+  width: 99vw;
   height: 90vh;
   border-radius: 15px;
   border: 3px solid #000000;
   display: flex;
   position: relative;
   z-index: 2;
+}
+.vending-machine .graffiti {
+  position: absolute;
+  z-index: 3;
+  bottom: 10%;
+  width: 85px;
+  right: 0%;
+  transform: rotate(-15deg);
+}
+.vending-machine .scratches {
+  position: absolute;
+  width: 30%;
+  z-index: 5;
+  top: 10%;
+  left: 40%;
 }
 .vending-machine .bottom {
   width: 100%;
@@ -80,7 +95,7 @@ body .app {
 }
 .vending-machine .buttons {
   background-color: #98D4F6;
-  flex: 1;
+  max-width: 86px;
   height: 100%;
   position: relative;
   border-radius: 0px 11px 11px 0px;
@@ -121,6 +136,7 @@ body .app {
   position: relative;
   font-size: small;
   padding: 0.5em;
+  z-index: 4;
 }
 .vending-machine .buttons .pad .screen::after {
   content: "";
@@ -253,6 +269,7 @@ body .app {
   align-items: center;
   display: flex;
   font-size: smaller;
+  border-radius: 2px 2px 0px 0px;
 }
 .vending-machine .buttons .pad .card .circle {
   width: 10px;
@@ -265,7 +282,7 @@ body .app {
   transform: translate(-50%, -50%);
 }
 .vending-machine .door {
-  width: 80%;
+  flex: 1;
   background-color: #ea4969;
   height: 100%;
   border-right: 3px solid #000000;
@@ -305,6 +322,7 @@ body .app {
   display: flex;
   align-items: center;
   flex-direction: column;
+  z-index: 4;
 }
 .vending-machine .door .glass .glaire {
   width: 200%;
@@ -559,6 +577,9 @@ body .app {
 .vending-machine .trap:hover .trap-door {
   transform: rotateX(-50deg);
 }
+.vending-machine .trap:hover .glaire {
+  transform: translateX(-5%) rotate(30deg);
+}
 .vending-machine .trap .lid {
   width: 100%;
   background-color: #f2eceb;
@@ -580,6 +601,7 @@ body .app {
   position: relative;
   top: 50%;
   left: -50%;
+  transition: transform 500ms ease-in-out;
 }
 .vending-machine .trap .glaire::after {
   content: "";
@@ -664,17 +686,19 @@ body .app {
   transform: skewX(20deg);
 }
 .light {
-  position: absolute;
+  position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  z-index: 5;
-  background-color: rgba(0, 0, 0, 0);
+  z-index: 3;
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 0;
   pointer-events: none;
 }
 @keyframes flickerI {
   0% {
-    opacity: 0.4;
+    opacity: 0;
   }
   5% {
     opacity: 0.5;
@@ -713,7 +737,50 @@ body .app {
     opacity: 0.5;
   }
   100% {
-    opacity: 1;
+    opacity: 0;
   }
+}
+.light.flicker {
+  animation: flickerI 0.5s linear reverse forwards;
+}
+.button-sound {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 1em;
+  top: 1em;
+  border: 3px solid #000000;
+  border-radius: 6px;
+  z-index: 10;
+  background-color: #FDD071;
+  color: white;
+}
+.button-sound.mute {
+  background-color: #ea4969;
+}
+.button-sound.mute svg:nth-of-type(2) {
+  display: none;
+}
+.button-sound.mute svg:nth-of-type(1) {
+  display: unset;
+}
+.button-sound svg {
+  width: 20px;
+  height: 20px;
+  transform: translateX(2px);
+}
+.button-sound svg:nth-of-type(2) {
+  display: unset;
+}
+.button-sound svg:nth-of-type(1) {
+  display: none;
+}
+.graffiti2 {
+  position: absolute;
+  width: 20%;
+  left: 5%;
 }
 /*# sourceMappingURL=index.78607793.css.map */
