@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@forgjs/noframework": "^2.0.2",
+    "@openzeppelin/contracts": "^4.2.0",
     "parcel": "^2.0.0-nightly.746"
   },
   "devDependencies": {
