@@ -42,11 +42,13 @@ app.post('/create-nft', (req, res) => {
     const ext = files.file.type.split('/')[1];
     const image = fs.readFileSync(oldpath);
     try {
-      s3.putObjet({
+      s3.putputObjet({
         Bucket: 'fls.tnvm.store',
         Key: `${id}.${ext}`,
         Body: image,
         ACL: 'public',
+      }, (e) => {
+        if (e) throw err;
       });
 
       s3.putObjet({
@@ -57,6 +59,8 @@ app.post('/create-nft', (req, res) => {
           image: `${id}.${ext}`,
         }),
         ACL: 'public',
+      }, (e) => {
+        if (e) throw err;
       });
       res.json({ error: false, path: `${id}.json` });
     } catch (e) {
