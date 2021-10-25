@@ -1,0 +1,5 @@
+{
+  "/create-nft": {
+    "target": "http://localhost:8080/"
+  }
+}
