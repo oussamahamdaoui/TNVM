@@ -2,8 +2,16 @@ const express = require('express');
 const formidable = require('formidable');
 const fs = require('fs');
 const { nanoid } = require('nanoid');
+const AWS = require('aws-sdk');
 
 const PORT = process.env.PORT || 8080;
+const { FILE_STORAGE_KEY, FILE_STORAGE_SECRET } = process.env;
+const spacesEndpoint = new AWS.Endpoint('fra1.digitaloceanspaces.com');
+const s3 = new AWS.S3({
+  endpoint: spacesEndpoint,
+  accessKeyId: FILE_STORAGE_KEY,
+  secretAccessKey: FILE_STORAGE_SECRET,
+});
 
 const app = express();
 app.use(express.json());
@@ -32,22 +40,28 @@ app.post('/create-nft', (req, res) => {
     const oldpath = files.file.path;
     const id = nanoid();
     const ext = files.file.type.split('/')[1];
-    const newpath = `./dist/fls/${id}.${ext}`;
+    const image = fs.readFileSync(oldpath);
+    try {
+      s3.putObjet({
+        Bucket: 'fls.tnvm.store',
+        Key: `${id}.${ext}`,
+        Body: image,
+        ACL: 'public',
+      });
 
-    fs.rename(oldpath, newpath, (e) => {
-      if (e) res.json({ error: true });
-      else {
-        fs.writeFile(`./dist/fls/${id}.json`, JSON.stringify({
+      s3.putObjet({
+        Bucket: 'fls.tnvm.store',
+        Key: `${id}.${ext}`,
+        Body: JSON.stringify({
           ...JSON.parse(fields.json),
-          image: `/fls/${id}.${ext}`,
-        }), (err2) => {
-          if (err2) res.json({ error: true });
-          else {
-            res.json({ error: false, path: `/fls/${id}.json` });
-          }
-        });
-      }
-    });
+          image: `${id}.${ext}`,
+        }),
+        ACL: 'public',
+      });
+      res.json({ error: false, path: `/fls/${id}.json` });
+    } catch (e) {
+      res.json({ error: true });
+    }
   });
 });
 

@@ -18,7 +18,7 @@ async function loadNFTs() {
 
   const items = await Promise.all(data.map(async (i) => {
     const tokenUri = await tokenContract.tokenURI(i.tokenId);
-    const meta = await (await fetch(tokenUri)).json();
+    const meta = await (await fetch(process.env.NODE_ENV === 'DEV' ? tokenUri : `https://fls.tnvm.store/${tokenUri}`)).json();
     const price = ethers.utils.formatUnits(i.price.toString(), 'ether');
     const item = {
       price,
@@ -303,7 +303,7 @@ const VM = async (eventManager) => {
     Object.keys(places).forEach((place) => {
       $$(`[position="${place}"]>img`, DomElement).forEach((e) => e.remove());
       places[place].forEach((nft) => {
-        const nftElem = html`<img src="${nft.image}">`;
+        const nftElem = html`<img src="${process.env.NODE_ENV === 'DEV' ? nft.image : `https://fls.tnvm.store/${nft.image}`}">`;
         nftElem.nftData = nft;
         $(`[position="${place}"]`, DomElement)
           .appendChild(nftElem);
