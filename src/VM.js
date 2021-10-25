@@ -1,7 +1,7 @@
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 import {
-  nftaddress, nftmarketaddress, providerUrl,
+  nftaddress, nftmarketaddress,
 } from '../config';
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
@@ -9,7 +9,9 @@ import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
 const { html, $, $$ } = require('@forgjs/noframework');
 
 async function loadNFTs() {
-  const provider = new ethers.providers.JsonRpcProvider(providerUrl);
+  const web3Modal = new Web3Modal();
+  const connection = await web3Modal.connect();
+  const provider = new ethers.providers.Web3Provider(connection);
   const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
   const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider);
   const data = await marketContract.fetchMarketItems();
@@ -179,7 +181,9 @@ const VM = async (eventManager) => {
     },
   ];
 
-  const provider = new ethers.providers.JsonRpcProvider(providerUrl);
+  const web3Modal = new Web3Modal();
+  const connection = await web3Modal.connect();
+  const provider = new ethers.providers.Web3Provider(connection);
   const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider);
   let selected = null;
   marketContract.on('MarketItemCreated', () => {
