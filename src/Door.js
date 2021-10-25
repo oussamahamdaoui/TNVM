@@ -13,7 +13,7 @@ const {
 
 const NFTElem = (props, eventManager) => {
   const DomElement = html`<div class="nft">
-    <img src="${props.image}">
+    <img src="${process.env.NODE_ENV === 'DEV' ? props.image : `https://fls.tnvm.store/${props.image}`}">
     <div class="info">
       <h2>${escape(props.name)}</h2>
       <p>${escape(props.description)}</p>

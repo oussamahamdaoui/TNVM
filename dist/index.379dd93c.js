@@ -44869,7 +44869,7 @@ var _nftmarketJsonDefault = parcelHelpers.interopDefault(_nftmarketJson);
 const { html , $ , emptyElement , escape ,  } = require('@forgjs/noframework');
 const NFTElem = (props, eventManager)=>{
     const DomElement = html`<div class="nft">
-    <img src="${props.image}">
+    <img src="${`https://fls.tnvm.store/${props.image}`}">
     <div class="info">
       <h2>${escape(props.name)}</h2>
       <p>${escape(props.description)}</p>
