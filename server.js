@@ -58,7 +58,7 @@ app.post('/create-nft', (req, res) => {
         }),
         ACL: 'public',
       });
-      res.json({ error: false, path: `/fls/${id}.json` });
+      res.json({ error: false, path: `${id}.json` });
     } catch (e) {
       res.json({ error: true });
     }
