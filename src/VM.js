@@ -18,7 +18,7 @@ async function loadNFTs() {
 
   const items = await Promise.all(data.map(async (i) => {
     const tokenUri = await tokenContract.tokenURI(i.tokenId);
-    const meta = await (await fetch(process.env.NODE_ENV === 'DEV' ? tokenUri : `https://fls.tnvm.store/${tokenUri}`)).json();
+    const meta = await (await fetch(process.env.NODE_ENV === 'DEV' ? tokenUri : `https://fls.tnvm.store${tokenUri}`)).json();
     const price = ethers.utils.formatUnits(i.price.toString(), 'ether');
     const item = {
       price,
