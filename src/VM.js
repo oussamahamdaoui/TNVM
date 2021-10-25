@@ -1,10 +1,55 @@
-const { html, $ } = require('@forgjs/noframework');
+import Web3Modal from 'web3modal';
+import { ethers } from 'ethers';
+import {
+  nftaddress, nftmarketaddress, providerUrl,
+} from '../config';
+import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
+import Market from '../artifacts/contracts/Market.sol/NFTMarket.json';
 
-const VM = (eventManager) => {
+const { html, $, $$ } = require('@forgjs/noframework');
+
+async function loadNFTs() {
+  const provider = new ethers.providers.JsonRpcProvider(providerUrl);
+  const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
+  const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider);
+  const data = await marketContract.fetchMarketItems();
+
+  const items = await Promise.all(data.map(async (i) => {
+    const tokenUri = await tokenContract.tokenURI(i.tokenId);
+    const meta = await (await fetch(tokenUri)).json();
+    const price = ethers.utils.formatUnits(i.price.toString(), 'ether');
+    const item = {
+      price,
+      tokenId: i.tokenId.toNumber(),
+      seller: i.seller,
+      owner: i.owner,
+      image: meta.image,
+      name: meta.nftTitle,
+      description: meta.nftDescription,
+    };
+    return item;
+  }));
+  return items;
+}
+
+async function buyNft(nft) {
+  const web3Modal = new Web3Modal();
+  const connection = await web3Modal.connect();
+  const provider = new ethers.providers.Web3Provider(connection);
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+
+  const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
+  const transaction = await contract.createMarketSale(nftaddress, nft.tokenId, {
+    value: price,
+  });
+  await transaction.wait();
+}
+
+const VM = async (eventManager) => {
   const DomElement = html`<div class="vending-machine">
         <img class="graffiti" src="./graffiti.svg">
         <img class="scratches" src="./scratches.svg">
-
         <div class="door">
             <div class="nail"></div>
             <div class="nail"></div>
@@ -20,22 +65,17 @@ const VM = (eventManager) => {
                 <div class="shelves">
                     <div class="shelve">
                         <div class="product" position="11" style="--drop:400%;">
-                            <img src="one.png">
-                            <img src="one.png">
                             <div class="position">11</div>
                         </div>
                         <div class="product" position="12" style="--drop:400%;">
-                            <img src="two.png">
                             <div class="position">12</div>
                         </div>
                         <div class="product" position="13" style="--drop:400%;">
-                            <img src="two.png">
                             <div class="position">13</div>
                         </div>
                     </div>
                     <div class="shelve">
                         <div class="product" position="21" style="--drop:300%;">
-                            <img src="one.png">
                             <div class="position">21</div>
                         </div>
                         <div class="product" position="22" style="--drop:300%;">
@@ -50,8 +90,7 @@ const VM = (eventManager) => {
                             <div class="position">31</div>
                         </div>
                         <div class="product" position="32" style="--drop:200%;">
-                            <img src="one.png">
-                            <div class="position" >32</div>
+                            <div class="position">32</div>
                         </div>
                         <div class="product" position="33" style="--drop:200%;">
                             <div class="position">33</div>
@@ -105,7 +144,6 @@ const VM = (eventManager) => {
         <div class="foot left"></div>
         <div class="foot right"></div>
         <div class="bottom"></div>
-        <div class="light"></div>
     </div>`;
 
   const keyboard = $('.keyboard', DomElement);
@@ -114,7 +152,6 @@ const VM = (eventManager) => {
   const motorSound = new Audio('./motor.mp3');
   const bipSound = new Audio('/bip.mp3');
   const bgSound = new Audio('./bg.mp3');
-  const flickerSound = new Audio('./flicker.mp3');
   const dropSound = new Audio('./drop.mp3');
   const openSound = new Audio('./open.mp3');
   bgSound.loop = true;
@@ -132,19 +169,22 @@ const VM = (eventManager) => {
       audio: bgSound,
       volume: 0.5,
     }, {
-      name: 'flickerSound',
-      audio: flickerSound,
-      volume: 0.3,
-    }, {
       name: 'dropSound',
       audio: dropSound,
       volume: 0.3,
     }, {
       name: 'openSound',
       audio: openSound,
-      volume: 0.2,
+      volume: 0.05,
     },
   ];
+
+  const provider = new ethers.providers.JsonRpcProvider(providerUrl);
+  const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider);
+  let selected = null;
+  marketContract.on('MarketItemCreated', () => {
+    DomElement.loadNFTs();
+  });
 
   audioFiles.forEach((f, i) => { audioFiles[i].audio.volume = 0; });
 
@@ -160,7 +200,7 @@ const VM = (eventManager) => {
   });
 
   bgSound.addEventListener('timeupdate', () => {
-    const buffer = 0.4;
+    const buffer = 0.44;
     if (bgSound.currentTime > bgSound.duration - buffer) {
       bgSound.currentTime = 0;
       bgSound.play();
@@ -168,14 +208,25 @@ const VM = (eventManager) => {
   });
 
   trap.addEventListener('mouseenter', () => {
-    openSound.play();
+    if (audioFiles[0].audio.volume > 0) {
+      openSound.play();
+    }
   });
 
   trap.addEventListener('mouseleave', () => {
-    openSound.play();
+    if (audioFiles[0].audio.volume > 0) {
+      openSound.play();
+    }
   });
 
-  const drop = (elem) => {
+  trap.addEventListener('click', (e) => {
+    if (e.target === $('img', trap)) {
+      $('img', trap).className = '';
+      eventManager.emit('boughtNft');
+    }
+  });
+
+  const drop = async (elem) => {
     if (!elem || !$('img', elem)) return;
     $('img', elem).classList.add('drop');
     if ($('img', trap).classList.contains('drop')) {
@@ -183,20 +234,19 @@ const VM = (eventManager) => {
     }
     $('img', trap).src = $('img', elem).src;
     elem.parentNode.classList.add('drop');
-    const css = window.getComputedStyle($('img', elem));
-    motorSound.play();
-    const timeout = parseInt(css.animationDuration, 10) * 620;
-    const pos = Array.from($('img', elem).parentNode.parentNode.children).indexOf($('img', elem).parentNode);
+    if (audioFiles[0].audio.volume > 0) {
+      motorSound.play();
+    }
 
-    setTimeout(() => {
+    $('img', elem).onanimationend = () => {
+      const pos = Array.from($('img', elem).parentNode.parentNode.children).indexOf($('img', elem).parentNode);
       $('img', trap).classList.add(`pos${pos}`);
       $('img', trap).classList.add('drop');
-      dropSound.play();
-    }, timeout);
-
-    $('img', elem).addEventListener('animationend', () => {
+      if (audioFiles[0].audio.volume > 0) {
+        dropSound.play();
+      }
       $('img', elem).remove();
-    });
+    };
   };
 
   keyboard.addEventListener('click', (e) => {
@@ -205,40 +255,59 @@ const VM = (eventManager) => {
     if (e.target.classList.contains('green')) {
       if (selectedItem.innerHTML.length < 2) return;
       const id = selectedItem.innerHTML;
-      drop($(`[position="${id}"]`, DomElement));
-      selectedItem.innerHTML = '';
+      selected = $(`[position="${id}"]`, DomElement);
+      if (selected === null) return;
+      const { price } = $('img', selected).nftData;
+      selectedItem.innerHTML = price;
     } else {
+      if (selected) {
+        selectedItem.innerHTML = '';
+        selected = null;
+      }
       selectedItem.innerHTML = (selectedItem.innerHTML + e.target.innerHTML).slice(-2);
     }
   });
 
-  let flickerTime = Math.random() * 30000 + 500;
-  const light = $('.light', DomElement);
-
-  const flicker = () => {
-    if (light.classList.contains('flicker')) {
-      return;
-    }
-    light.classList.add('flicker');
-    flickerSound.play();
-    Array(10).fill().map((e, i) => {
-      setTimeout(() => {
-        if (light.classList.contains('flicker')) {
-          flickerSound.play();
-        }
-      }, i * 50);
-      return false;
-    });
-    flickerTime = Math.random() * 30000 + 500;
-    console.log(flickerTime);
-    setTimeout(flicker, flickerTime);
-  };
-
-  light.addEventListener('animationend', () => {
-    light.classList.remove('flicker');
+  $('.card', DomElement).addEventListener('click', async () => {
+    if (selected === null) return;
+    await buyNft($('img', selected).nftData);
+    setTimeout(() => {
+      drop(selected);
+      selectedItem.innerHTML = '';
+      selected = null;
+    }, 1200);
   });
 
-  setTimeout(flicker, flickerTime);
+  DomElement.loadNFTs = async () => {
+    const nfts = await loadNFTs();
+    const places = {
+      11: [],
+      12: [],
+      13: [],
+      21: [],
+      22: [],
+      23: [],
+      31: [],
+      32: [],
+      33: [],
+    };
+    let i = 0;
+    nfts.forEach((nft) => {
+      places[Object.keys(places)[i % Object.keys(places).length]].push(nft);
+      i += 1;
+    });
+    Object.keys(places).forEach((place) => {
+      $$(`[position="${place}"]>img`, DomElement).forEach((e) => e.remove());
+      places[place].forEach((nft) => {
+        const nftElem = html`<img src="${nft.image}">`;
+        nftElem.nftData = nft;
+        $(`[position="${place}"]`, DomElement)
+          .appendChild(nftElem);
+      });
+    });
+  };
+
+  DomElement.loadNFTs();
 
   return DomElement;
 };
