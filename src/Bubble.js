@@ -45,7 +45,7 @@ const Bubble = (eventManager) => {
 
   priceInput.addEventListener('keydown', (e) => {
     if (!/[0-9]/.test(e.key)
-      && ['Backspace', 'ArrowLeft', 'ArrowRight'].indexOf(e.key) === -1) {
+      && ['Backspace', 'ArrowLeft', 'ArrowRight', '.'].indexOf(e.key) === -1) {
       e.preventDefault();
       return false;
     }
