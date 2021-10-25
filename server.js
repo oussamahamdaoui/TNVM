@@ -61,6 +61,7 @@ app.post('/create-nft', (req, res) => {
       res.json({ error: false, path: `${id}.json` });
     } catch (e) {
       res.json({ error: true });
+      console.log(e);
     }
   });
 });
