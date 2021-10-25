@@ -20073,8 +20073,8 @@ function keccak256(data) {
 }
 
 },{"js-sha3":"3PGTq","@ethersproject/bytes":"bWDaw","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"3PGTq":[function(require,module,exports) {
-var global = arguments[3];
 var process = require("process");
+var global = arguments[3];
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *

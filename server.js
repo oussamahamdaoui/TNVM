@@ -51,6 +51,8 @@ app.post('/create-nft', (req, res) => {
   });
 });
 
+app.use(express.static('dist'));
+
 app.listen(PORT, () => {
   console.log('Server started.');
 });

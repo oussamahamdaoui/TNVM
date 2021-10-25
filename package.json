@@ -2,7 +2,6 @@
   "name": "simpleapp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "dependencies": {
     "@forgjs/noframework": "^2.0.2",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
@@ -16,19 +15,21 @@
     "hardhat": "^2.6.4",
     "nanoid": "^3.1.30",
     "parcel": "^2.0.0-nightly.746",
-    "web3modal": "^1.9.4"
+    "web3modal": "^1.9.4",
+    "feather-icons": "^4.28.0"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.0.0-nightly.748",
     "eslint": "^7.30.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
-    "feather-icons": "^4.28.0",
     "truffle": "^5.1.33"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "parcel index.html",
+    "serve": "server.js",
+    "build":"parcel build index.html",
     "start-node": "npx hardhat node",
     "publish": "npx hardhat run scripts/deploy.js --network localhost",
     "publish-test-net":"npx hardhat run scripts/deploy.js --network evmos",
