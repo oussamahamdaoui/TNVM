@@ -3,7 +3,7 @@ const formidable = require('formidable');
 const fs = require('fs');
 const { nanoid } = require('nanoid');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 const app = express();
 app.use(express.json());
