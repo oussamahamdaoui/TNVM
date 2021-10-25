@@ -112,7 +112,7 @@ const App = () => {
     formData.append('json', JSON.stringify({
       nftTitle, nftDescription,
     }));
-    let url = await fetch('http://localhost:3000/create-nft', {
+    let url = await fetch('/create-nft', {
       method: 'POST',
       body: formData,
     });
