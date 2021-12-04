@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/oussamahamdaoui/Documents/TNVM/contracts/Market.sol": {
-      "lastModificationDate": 1635162590073,
+      "lastModificationDate": 1636393462420,
       "contentHash": "0d0a0676f8139a0445ea5de516c8dd6a",
       "sourceName": "contracts/Market.sol",
       "solcConfig": {
@@ -535,6 +535,44 @@
       ],
       "artifacts": [
         "ERC721URIStorage"
+      ]
+    },
+    "/Users/oussamahamdaoui/Documents/TNVM/contracts/Locker.sol": {
+      "lastModificationDate": 1635628453817,
+      "contentHash": "4ece1e1d0fb256a99a923a5dbb512ce8",
+      "sourceName": "contracts/Locker.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.3"
+      ],
+      "artifacts": [
+        "Locker"
       ]
     }
   }

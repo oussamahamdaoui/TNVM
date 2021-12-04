@@ -21,8 +21,13 @@ module.exports = {
       accounts: [privateKey],
     },
     evmos: {
-      url: 'http://arsiamons.rpc.evmos.org:8545',
+      url: 'https://ethereum.rpc.evmos.dev',
       chainId: 9000,
+      accounts: [privateKey],
+    },
+    cronos: {
+      url: 'https://evm-cronos.crypto.org',
+      chainId: 25,
       accounts: [privateKey],
     },
   },

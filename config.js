@@ -1,3 +1,3 @@
-export const nftmarketaddress = '0xCfaa0489f27b8A6980DeA5134f32516c755B7e63';
-export const nftaddress = '0xAE17B5B870fA5DD28Eb444D30B7862BfAd84882B';
-export const providerUrl = 'http://arsiamons.rpc.evmos.org:8545';
+export const nftmarketaddress = '0xB581C9264f59BF0289fA76D61B2D0746dCE3C30D';
+export const nftaddress = '0xC469e7aE4aD962c30c7111dc580B4adbc7E914DD';
+export const providerUrl = 'https://ethereum.rpc.evmos.dev';

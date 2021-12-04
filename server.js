@@ -41,31 +41,33 @@ app.post('/create-nft', (req, res) => {
     const id = nanoid();
     const ext = files.file.type.split('/')[1];
     const image = fs.readFileSync(oldpath);
-    try {
-      s3.upload({
-        Bucket: 'fls.tnvm.store',
-        Key: `${id}.json`,
-        Body: Buffer.from(JSON.stringify({
-          ...JSON.parse(fields.json),
-          image: `${id}.${ext}`,
-        }), 'utf8'),
-        ContentType: 'application/json; charset=utf-8',
-        ACL: 'public-read',
-      }, (e) => {
-        if (e) throw e;
+    if (process.NODE_ENV === 'production') {
+      try {
         s3.upload({
           Bucket: 'fls.tnvm.store',
-          Key: `${id}.${ext}`,
-          Body: image,
+          Key: `${id}.json`,
+          Body: Buffer.from(JSON.stringify({
+            ...JSON.parse(fields.json),
+            image: `${id}.${ext}`,
+          }), 'utf8'),
+          ContentType: 'application/json; charset=utf-8',
           ACL: 'public-read',
-        }, (er) => {
-          if (er) throw er;
-          return res.json({ error: false, path: `${id}.json` });
+        }, (e) => {
+          if (e) throw e;
+          s3.upload({
+            Bucket: 'fls.tnvm.store',
+            Key: `${id}.${ext}`,
+            Body: image,
+            ACL: 'public-read',
+          }, (er) => {
+            if (er) throw er;
+            return res.json({ error: false, path: `${id}.json` });
+          });
         });
-      });
-    } catch (e) {
-      res.json({ error: true });
-      console.log(e);
+      } catch (er) {
+        res.json({ error: true });
+        console.log(er);
+      }
     }
   });
 });

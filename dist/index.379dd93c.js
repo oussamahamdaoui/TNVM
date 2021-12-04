@@ -44830,8 +44830,8 @@ const Bubble = (eventManager)=>{
         return true;
     });
     $('.submitPrice', DomElement).addEventListener('click', ()=>{
-        if (priceInput.value !== '' && parseInt(priceInput.value, 10) > 0) {
-            DomElement.value = parseInt(priceInput.value, 10);
+        if (priceInput.value !== '' && parseFloat(priceInput.value, 10) > 0) {
+            DomElement.value = parseFloat(priceInput.value, 10);
             eventManager.emit(sell ? 'gotPrice' : 'mintNFT');
             DomElement.setText('I\'m creating your NFT please wait...');
             priceHolder.classList.add('hide');
