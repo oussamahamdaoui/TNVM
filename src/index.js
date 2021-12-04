@@ -173,4 +173,26 @@ const App = () => {
 
   return DomElement;
 };
-document.body.append(App());
+if (window.ethereum) {
+  window.ethereum.request({
+    method: 'wallet_addEthereumChain',
+    params: [{
+      chainId: '0x2328',
+      chainName: 'Evmos Testnet',
+      nativeCurrency: {
+        name: 'PHOTON',
+        symbol: 'PHO',
+        decimals: 18,
+      },
+      rpcUrls: ['https://ethereum.rpc.evmos.dev'],
+      blockExplorerUrls: ['https://evm.evmos.com'],
+    }],
+  }).then((e) => {
+    console.log(e);
+    document.body.append(App());
+  }).catch(() => {
+    document.body.append(html`<h1>Methamask is required to run this app</h1>`);
+  });
+} else {
+  document.body.append(html`<h1>Methamask is required to run this app</h1>`);
+}
