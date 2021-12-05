@@ -29,6 +29,8 @@ app.use((req, res, next) => {
 });
 
 app.post('/create-nft', (req, res) => {
+  console.log('/create-nft');
+  console.log(process.NODE_ENV);
   const form = new formidable.IncomingForm();
   form.parse(req, (err, fields, files) => {
     if (files.file.type.split('/')[0] !== 'image') {
@@ -69,6 +71,10 @@ app.post('/create-nft', (req, res) => {
         console.log(er);
       }
     }
+  });
+
+  return res.json({
+    error: true,
   });
 });
 
