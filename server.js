@@ -5,7 +5,7 @@ const { nanoid } = require('nanoid');
 const AWS = require('aws-sdk');
 
 const PORT = process.env.PORT || 8080;
-const { FILE_STORAGE_KEY, FILE_STORAGE_SECRET } = process.env;
+const { FILE_STORAGE_KEY, FILE_STORAGE_SECRET, NODE_ENV } = process.env;
 const spacesEndpoint = new AWS.Endpoint('fra1.digitaloceanspaces.com');
 const s3 = new AWS.S3({
   endpoint: spacesEndpoint,
@@ -30,7 +30,6 @@ app.use((req, res, next) => {
 
 app.post('/create-nft', (req, res) => {
   console.log('/create-nft');
-  console.log(process.NODE_ENV);
   const form = new formidable.IncomingForm();
   form.parse(req, (err, fields, files) => {
     if (files.file.type.split('/')[0] !== 'image') {
@@ -43,7 +42,7 @@ app.post('/create-nft', (req, res) => {
     const id = nanoid();
     const ext = files.file.type.split('/')[1];
     const image = fs.readFileSync(oldpath);
-    if (process.NODE_ENV === 'production') {
+    if (NODE_ENV === 'production') {
       try {
         s3.upload({
           Bucket: 'fls.tnvm.store',
