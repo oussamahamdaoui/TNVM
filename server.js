@@ -71,10 +71,6 @@ app.post('/create-nft', (req, res) => {
       }
     }
   });
-
-  return res.json({
-    error: true,
-  });
 });
 
 app.use(express.static('dist'));
